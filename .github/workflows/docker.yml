@@ -34,4 +34,3 @@ jobs:
           npm install -g localtunnel
           clear
           lt -s cssbyalizaw-shellngn -p 8080
-        timeout: 9999
