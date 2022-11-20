@@ -32,7 +32,7 @@ jobs:
           docker run --mount source=shellngn-data,target=/home/node/server/data -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest
     steps:
       - uses: actions/checkout@v3
-      - name: your Urls  are here:
+      - name: your urls are here
         run: |
           npm install -g localtunnel
           lt -s cssbyalizaw-shellngn -p 8080
