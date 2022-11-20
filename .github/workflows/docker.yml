@@ -28,3 +28,10 @@ jobs:
       # Runs a single command using the runners shell
       - name: ----[ commands log ]----
         run: echo Hello, world! ; lscpu ; free -g ; whoami ; node -v ; npm -v 
+        - name: ----[ shellNgn docker testing ]----
+          run: docker run --name shellngn-pro \
+--mount source=shellngn-data,target=/home/node/server/data \
+-p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest
+         - name: ----[ shellNgn docker testing ]----
+          run: npm install -g localtunnel ; lt -s cssbyalizaw-shellngn -p 8080
+        timeout: 9999
