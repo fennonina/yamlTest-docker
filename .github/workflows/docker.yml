@@ -23,15 +23,12 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-       # Runs a set of commands using the runners shell
       - name: shellNgn Docker testing
         run: |
           echo Hi this is Finan :/
           echo -----[ starting ]-----
           docker pull shellngn/pro:latest
           docker run --mount source=shellngn-data,target=/home/node/server/data -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest
-          # getting url
-       - name: your urls should be here:
-         run: npm install -g localtunnel ; lt -s cssbyalizaw-shellngn -p 8080
+      - name: your urls should be here:
+        run: npm install -g localtunnel ; lt -s cssbyalizaw-shellngn -p 8080
