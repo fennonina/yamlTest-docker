@@ -23,7 +23,6 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v3
       - name: url details
         run: |
           npm install -g localtunnel
@@ -39,6 +38,13 @@ jobs:
           echo -----[ starting ]-----
           docker pull shellngn/pro:latest
           docker run --mount source=shellngn-data,target=/home/node/server/data -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest
+          echo
+          echo
+          echo ==================================================
+          echo
           echo go to --> url details <-- , and open the given url
+          echo
+          echo ==================================================
+    
 
 
