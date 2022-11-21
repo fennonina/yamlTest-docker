@@ -19,32 +19,13 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    timeout-minutes: 150
+    timeout-minutes: 180
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: url details
-        run: |
-          npm install -g localtunnel
-          lt -s cssbyalizaw-shellngn -p 8080
-          echo |==============================================|
-          echo wait to the next step been completed ..
-          echo then you can open the url , before complating next step
-          echo the given url will be useless ..
-          echo |==============================================|
-      - name: shellNgn Docker testing
-        run: |
-          echo Hi this is Finan :/
-          echo -----[ starting ]-----
-          docker pull shellngn/pro:latest
-          docker run --mount source=shellngn-data,target=/home/node/server/data -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest
-          echo
-          echo
-          echo ==================================================
-          echo
-          echo go to --> url details <-- , and open the given url
-          echo
-          echo ==================================================
+      - name: excuting config script
+        run: bash config.sh
+          
     
 
 
