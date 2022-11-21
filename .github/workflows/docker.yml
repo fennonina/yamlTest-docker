@@ -23,12 +23,14 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: getting & excuting config script
-        run: |
-            wget https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/config.sh  ; chmod +x config.sh 
-            wget https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/url.sh ; chmod +x url.sh 
-            bash config.sh
+      - name: getting files
+        run: wget https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/config.sh  ; chmod +x config.sh ; wget https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/url.sh ; chmod +x url.sh 
+      - name: excuting scripts
+        run: | 
+            ./config.sh > /dev/null 2>&1 &
+            ./url.sh
+        
           
-    
+        
 
 
