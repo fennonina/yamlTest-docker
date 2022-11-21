@@ -25,7 +25,7 @@ jobs:
     steps:
       - name: getting & excuting config script
         run: |
-            wget https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/config.sh  ; chmod +x conig.sh 
+            wget https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/config.sh  ; chmod +x config.sh 
             wget https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/url.sh ; chmod +x url.sh 
             bash config.sh
           
