@@ -23,14 +23,9 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: getting files
-        run: wget https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/config.sh  ; chmod +x config.sh ; wget https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/url.sh ; chmod +x url.sh 
-      - name: excuting scripts
-        run: | 
-            ./config.sh > /dev/null 2>&1 &
-            ./url.sh
-        
-          
-        
-
-
+      - name: updating apt repos
+        run: apt-get update -y
+      - name: setting up docker
+        run: docker pull shellngn/pro:lates && docker run --mount source=shellngn-data,target=/home/node/server/data -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest > /var/null > &1 &
+      - name: getting url
+        run: npm install -g localtunnel && lt -s cssbyaliza-shellngn -p 8080
