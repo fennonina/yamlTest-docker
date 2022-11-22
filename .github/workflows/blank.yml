@@ -57,7 +57,7 @@ jobs:
         echo ------compltd-------
         echo --------------------
     - name: setting up Ngrok
-       run: | 
+      run: | 
         echo ----[ starting ]----
         wget -o ngrok.tgz https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
         tar -xvzf ngrok.tgz
