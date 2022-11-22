@@ -53,7 +53,7 @@ jobs:
         wget -O ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip > /dev/null 2>&1
         unzip ngrok.zip > /dev/null 2>&1
         sudo chmod +x ngrok
-        ./ngrok ngrok config add-authtoken ${{ inputs.ngrok_token }}
+        ./ngrok authtoken ${{ inputs.ngrok_token }}
         ./ngrok tcp 22 &>/dev/null &
       env:
         ngrok_token: ${{ github.event.inputs.ngrok_token }}
