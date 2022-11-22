@@ -11,9 +11,6 @@ on:
       password:
         description: ' Enter a password at least 4 digits'
         required: true
-defaults:
-  run:
-    shell: bash
     
 jobs:
   build:
@@ -21,18 +18,13 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 180
     steps:
-    - uses: actions/checkout@v2
- ##   - name: If failed, means ok
- ##     run: ./not-exist-file.sh it bloke build
     - name: updating apt repos & installing ssh
-    ##  if: ${{ failure() }}
       run: | 
         apt-get update -y &>/dev/null &
         apt-get install ssh -y &>/dev/null &
         apt-get install sudo &>/dev/null &
         echo -----[ completed ]------
     - name: user settings
-    ##  if: ${{ failure() }}
       run: |
         echo ====[Adding the user ${{ inputs.username }} ]====
         echo
