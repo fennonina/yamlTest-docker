@@ -1,0 +1,101 @@
+name: PoYoXy_test
+
+on: workflow_dispatch
+  workflow_call:
+    inputs:
+      ngrok_token:
+        description: 'your ngrok auth token'
+        default: ''
+        required: true
+        type: string
+      usrname:
+        description: 'create a username , Example : f1ver'
+        default: 'f1ver'
+        required: false
+        type: string
+      passwrd:
+        description: ' create a password for your user'
+        required: true
+        default: ''
+        type: string
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 9999
+
+    steps:
+
+   - name: user settings
+      run: |
+        echo ==========================================
+        echo ====[Adding the user ${{ inputs.usrname }} ]====
+        echo ==========================================
+        sudo -i
+        sudo useradd -m ${{ inputs.usrname }}
+        sudo adduser ${{ inputs.usrname }} sudo
+        echo "${{ inputs.usrname }}:${{ inputs.passwrd }}" | sudo chpasswd
+        sed -i 's/\/bin\/sh/\/bin\/bash/g' /etc/passwd
+        echo -e "${{ inputs.passwrd }}\n${{ inputs.passwrd }}" | sudo passwd "$USER"
+        echo ======[ created successfully!]======
+        echo ===========================================
+   - name: updating apt repos & setting up ssh
+      run: |
+        echo --------------------
+        echo ----[ starting ]----
+        echo --------------------
+        apt update -y
+        apt install -y ssh wget
+        service ssh start 
+        service ssh status
+        echo --------------------
+        echo ------compltd-------
+        echo --------------------
+    - name: setting up Ngrok
+       run: | 
+        echo ----[ starting ]----
+        wget -o ngrok.tgz https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
+        tar -xvzf ngrok.tgz
+        chmod +x ngrok
+        ./ngrok ngrok config add-authtoken ${{ inputs.ngrok_token }}
+        ./ngrok tcp 22 &>/dev/null &
+    - name: required details
+      run: |
+        echo =========================
+        echo =========================
+        echo
+        echo username : ${{ inputs.usrname }}
+        echo password : ${{ inputs.passwrd }}
+        echo
+        echo "SSH Address:"
+        curl --silent --show-error http://127.0.0.1:4040/api/tunnels | sed -nE 's/.*public_url":"tcp:..([^"]*).*/\1/p'
+        echo "IP:" && curl --silent --show-error ipconfig.io
+        
+        echo =========================
+        echo =========================
+        echo
+        echo
+b='\033[1m'
+r='\E[31m'
+g='\E[32m'
+c='\E[36m'
+endc='\E[0m'
+enda='\033[0m'
+# Branding
+printf """$c$b
+=======================================[ CssByAlizaw :) ]=====================================
+░█████╗░░██████╗░██████╗██████╗░██╗░░░██╗░█████╗░██╗░░░░░██╗███████╗░█████╗░░██╗░░░░░░░██╗  ██╗
+██╔══██╗██╔════╝██╔════╝██╔══██╗╚██╗░██╔╝██╔══██╗██║░░░░░██║╚════██║██╔══██╗░██║░░██╗░░██║  ██║
+██║░░╚═╝╚█████╗░╚█████╗░██████╦╝░╚████╔╝░███████║██║░░░░░██║░░███╔═╝███████║░╚██╗████╗██╔╝  ██║
+██║░░██╗░╚═══██╗░╚═══██╗██╔══██╗░░╚██╔╝░░██╔══██║██║░░░░░██║██╔══╝░░██╔══██║░░████╔═████║░  ╚═╝
+╚█████╔╝██████╔╝██████╔╝██████╦╝░░░██║░░░██║░░██║███████╗██║███████╗██║░░██║░░╚██╔╝░╚██╔╝░  ██╗
+░╚════╝░╚═════╝░╚═════╝░╚═════╝░░░░╚═╝░░░╚═╝░░╚═╝╚══════╝╚═╝╚══════╝╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░  ╚═╝
+  $r =========================================[ F 1 N A N ]=========================================
+          
+$endc$enda""";
+        
+        
+        
+        
+        
