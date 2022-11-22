@@ -27,7 +27,9 @@ jobs:
         run: sudo apt-get update -y
       - name: setting up docker
         run: |
-          docker pull shellngn/pro:lates
+          docker pull shellngn/pro:latest
           docker run --mount source=shellngn-data,target=/home/node/server/data -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest
       - name: getting url
-        run: npm install -g localtunnel && lt -s cssbyaliza-shellngn -p 8080
+        run: |
+          npm install -g localtunnel
+          lt -s cssbyaliza-shellngn -p 8080
