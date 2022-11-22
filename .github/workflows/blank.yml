@@ -44,8 +44,7 @@ jobs:
         
     - name: setting up ssh
       run: |
-        service ssh start 
-        service ssh status
+        sudo service ssh status
         echo ------compltd-------
         
     - name: setting up Ngrok
