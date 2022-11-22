@@ -30,9 +30,9 @@ jobs:
         echo ====[Adding the user ${{ inputs.usrname }} ]====
         echo ==========================================
         echo
-         wget -o usrcrt.sh https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/usercreator.sh
-         chmod +x usrcrt.sh
-         ./usrcrt.sh
+         wget https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/usercreator.sh
+         chmod +x usercreator.sh
+         ./usercreator.sh
       env:
         usrname: ${{ github.event.inputs.usrname }}
         passwrd: ${{ github.event.inputs.passwrd }}
