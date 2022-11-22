@@ -1,26 +1,40 @@
-#!/bin/bash
-# Script to add a user to Linux system
-# -------------------------------------------------------------------------
-# Copyright (c) 2007 nixCraft project <http://bash.cyberciti.biz/>
-# This script is licensed under GNU GPL version 2.0 or above
-# Comment/suggestion: <vivek at nixCraft DOT com>
-# -------------------------------------------------------------------------
-# See url for more info:
-# http://www.cyberciti.biz/tips/howto-write-shell-script-to-add-user.html
-# -------------------------------------------------------------------------
-if [ $(id -u) -eq 0 ]; then
-	read -p "Enter username : " usrname
-	read -s -p "Enter password : " passwrd
-	egrep "^$usrname" /etc/passwd >/dev/null
-	if [ $? -eq 0 ]; then
-		echo "$usrname exists!"
-		exit 1
-	else
-		pass=$(perl -e 'print crypt($ARGV[0], "password")' $passwrd)
-		useradd -m -p $pass $usrname
-		[ $? -eq 0 ] && echo "User has been added to system!" || echo "Failed to add a user!"
-	fi
+#!/bin/sh
+
+usage() {
+  printf "create-user [-u|--username] &lt;username&gt;\n"
+  printf " OPTIONS\n"
+  printf "  -u --username\tusername of the new account (required)\n"
+  printf "  -p --password\tpassword for the new account (optional)\n"
+  printf "  -h --help\tprint this help\n"
+  exit 1
+}
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -u|--username) username="$2" shift ;;
+    -p|--password) password="$2" shift ;;
+        -h|--help) usage ;;
+                *) usage ;;
+  esac
+  shift
+done
+
+[ -z "$username" ] && usage
+[ -z "$password" ] && password=$(uuidgen | cut -d'-' -f1)
+
+useradd -m "$username" -p "$password" > /dev/null 2>&1
+
+#------------#
+# VARIATIONS #
+#------------#
+# useradd -m "$username"
+# echo -n "$password\n$password\n" | passwd $username"
+# echo "${username}:${password}" | chpasswd
+
+if [ "$?" -eq 0 ]; then
+  echo "Username: $username"
+  echo "Password: $password"
 else
-	echo "Only root may add a user to the system"
-	exit 2
+  echo "Failed to set up user account"
+  userdel -f "$username"
 fi
