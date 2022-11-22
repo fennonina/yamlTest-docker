@@ -28,7 +28,8 @@ jobs:
       - name: setting up docker
         run: |
           docker pull shellngn/pro:latest
-          docker run --mount source=shellngn-data,target=/home/node/server/data -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest
+          docker run --mount source=shellngn-data,target=/home/node/server/data -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest > docklog.txt 2>&1 &
+          cat docklog.txt
       - name: getting url
         run: |
           npm install -g localtunnel
