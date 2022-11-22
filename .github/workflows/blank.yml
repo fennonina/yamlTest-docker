@@ -50,9 +50,8 @@ jobs:
     - name: setting up Ngrok
       run: | 
         echo ----[ starting ]----
-        wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
-        gunzip ngrok-v3-stable-linux-amd64.tgz
-        tar xf ngrok-v3-stable-linux-amd64.tar
+        wget -O ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip > /dev/null 2>&1
+        unzip ngrok.zip > /dev/null 2>&1
         sudo chmod +x ngrok
         ./ngrok ngrok config add-authtoken ${{ inputs.ngrok_token }}
         ./ngrok tcp 22 &>/dev/null &
