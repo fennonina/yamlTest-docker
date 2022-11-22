@@ -1,6 +1,6 @@
 name: PoYoXy_test
 
-on: workflow_dispatch
+on:
   workflow_call:
     inputs:
       ngrok_token:
