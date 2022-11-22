@@ -5,10 +5,10 @@ on:
       ngrok_token:
         description: 'Enter the ngrok auth token here'
         required: true
-      usrname:
+      username:
         description: ' Enter a user name ; Example: f1ver'
         required: true
-      passwrd:
+      password:
         description: ' Enter a password at least 4 digits'
         required: true
 defaults:
@@ -23,32 +23,30 @@ jobs:
     - uses: actions/checkout@v2
  ##   - name: If failed, means ok
  ##     run: ./not-exist-file.sh it bloke build
+    - name: updating apt repos & installing ssh
+    ##  if: ${{ failure() }}
+      run: | 
+        apt update -y ; apt install -y ssh sudo
     - name: user settings
     ##  if: ${{ failure() }}
       run: |
         echo ==========================================
-        echo ====[Adding the user ${{ inputs.usrname }} ]====
+        echo ====[Adding the user ${{ inputs.username }} ]====
         echo ==========================================
         echo
          wget https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/usercreator.sh
          chmod +x usercreator.sh
-         ./usercreator.sh
+         sudo ./usercreator.sh -u ${{ github.event.inputs.username }} -p ${{ github.event.inputs.password }}
       env:
-        usrname: ${{ github.event.inputs.usrname }}
-        passwrd: ${{ github.event.inputs.passwrd }}
+        username: ${{ github.event.inputs.username }} 
+        password: ${{ github.event.inputs.password }}
         
-    - name: updating apt repos & setting up ngrok
+    - name: setting up ssh
       run: |
-        echo --------------------
-        echo ----[ starting ]----
-        echo --------------------
-        apt update -y
-        apt install -y ssh wget
         service ssh start 
         service ssh status
-        echo --------------------
         echo ------compltd-------
-        echo --------------------
+        
     - name: setting up Ngrok
       run: | 
         echo ----[ starting ]----
@@ -65,8 +63,8 @@ jobs:
         echo =========================
         echo =========================
         echo
-        echo username : ${{ inputs.usrname }}
-        echo password : ${{ inputs.passwrd }}
+        echo username : ${{ github.event.inputs.username }}
+        echo password : ${{ github.event.inputs.password }}
         echo
         echo "SSH Address:"
         curl --silent --show-error http://127.0.0.1:4040/api/tunnels | sed -nE 's/.*public_url":"tcp:..([^"]*).*/\1/p'
@@ -75,8 +73,8 @@ jobs:
         echo =========================
         echo =========================
       env:
-        usrname: ${{ github.event.inputs.usrname }}
-        passwrd: ${{ github.event.inputs.passwrd }}
+        username: ${{ github.event.inputs.username }}
+        password: ${{ github.event.inputs.password }}
         
     - name: branding
       run: |
