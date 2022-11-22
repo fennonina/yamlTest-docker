@@ -1,5 +1,5 @@
 
-name: poyoxy3
+name: poyoxy-org
 on: 
   workflow_dispatch:
    inputs:
