@@ -1,0 +1,111 @@
+name: porotoxoos
+on: 
+  workflow_dispatch:
+   inputs:
+      ngrok_token:
+        description: 'Enter the ngrok auth token here'
+        required: true
+      usrname:
+        description: ' Enter a user name ; Example: f1ver'
+        required: true
+      passwrd:
+        description: ' Enter a password at least 4 digits'
+        required: true
+defaults:
+  run:
+    shell: bash
+    
+jobs:
+  build:
+    name: Linux System Build
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+ ##   - name: If failed, means ok
+ ##     run: ./not-exist-file.sh it bloke build
+    - name: user settings
+    ##  if: ${{ failure() }}
+      run: |
+        echo ==========================================
+        echo ====[Adding the user ${{ inputs.usrname }} ]====
+        echo ==========================================
+        echo
+        sudo -i
+        sudo useradd -m ${{ inputs.usrname }}
+        sudo adduser ${{ inputs.usrname }} sudo
+        echo "${{ inputs.usrname }}:${{ inputs.passwrd }}" | sudo chpasswd
+        sed -i 's/\/bin\/sh/\/bin\/bash/g' /etc/passwd
+        echo -e "${{ inputs.passwrd }}\n${{ inputs.passwrd }}" | sudo passwd "$USER"
+        echo
+        echo ===========================================
+        echo ======[ created successfully!]======
+        echo ===========================================
+      env:
+        usrnames: ${{ github.event.inputs.usrname }}
+        passwrd: ${{ github.event.inputs.passwrd }}
+        
+   - name: updating apt repos & setting up ssh
+      run: |
+        echo --------------------
+        echo ----[ starting ]----
+        echo --------------------
+        apt update -y
+        apt install -y ssh wget
+        service ssh start 
+        service ssh status
+        echo --------------------
+        echo ------compltd-------
+        echo --------------------
+    - name: setting up Ngrok
+       run: | 
+        echo ----[ starting ]----
+        wget -o ngrok.tgz https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
+        tar -xvzf ngrok.tgz
+        chmod +x ngrok
+        ./ngrok ngrok config add-authtoken ${{ inputs.ngrok_token }}
+        ./ngrok tcp 22 &>/dev/null &
+      env:
+        ngrok_token: ${{ github.event.inputs.ngrok_token }}
+        
+    - name: Your Machine details
+      run: |
+        echo =========================
+        echo =========================
+        echo
+        echo username : ${{ inputs.usrname }}
+        echo password : ${{ inputs.passwrd }}
+        echo
+        echo "SSH Address:"
+        curl --silent --show-error http://127.0.0.1:4040/api/tunnels | sed -nE 's/.*public_url":"tcp:..([^"]*).*/\1/p'
+        echo "IP:" && curl --silent --show-error ipconfig.io
+        echo
+        echo =========================
+        echo =========================
+      env:
+        usrname: ${{ github.event.inputs.usrname }}
+        passwrd: ${{ github.event.inputs.passwrd }}
+
+
+b='\033[1m'
+r='\E[31m'
+g='\E[32m'
+c='\E[36m'
+endc='\E[0m'
+enda='\033[0m'
+# Branding
+printf """$c$b
+=======================================[ CssByAlizaw :) ]=====================================
+░█████╗░░██████╗░██████╗██████╗░██╗░░░██╗░█████╗░██╗░░░░░██╗███████╗░█████╗░░██╗░░░░░░░██╗  ██╗
+██╔══██╗██╔════╝██╔════╝██╔══██╗╚██╗░██╔╝██╔══██╗██║░░░░░██║╚════██║██╔══██╗░██║░░██╗░░██║  ██║
+██║░░╚═╝╚█████╗░╚█████╗░██████╦╝░╚████╔╝░███████║██║░░░░░██║░░███╔═╝███████║░╚██╗████╗██╔╝  ██║
+██║░░██╗░╚═══██╗░╚═══██╗██╔══██╗░░╚██╔╝░░██╔══██║██║░░░░░██║██╔══╝░░██╔══██║░░████╔═████║░  ╚═╝
+╚█████╔╝██████╔╝██████╔╝██████╦╝░░░██║░░░██║░░██║███████╗██║███████╗██║░░██║░░╚██╔╝░╚██╔╝░  ██╗
+░╚════╝░╚═════╝░╚═════╝░╚═════╝░░░░╚═╝░░░╚═╝░░╚═╝╚══════╝╚═╝╚══════╝╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░  ╚═╝
+  $r =========================================[ F 1 N A N ]=========================================
+          
+$endc$enda""";
+        
+        
+        
+        
+        
