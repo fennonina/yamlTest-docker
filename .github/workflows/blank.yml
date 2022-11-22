@@ -26,13 +26,14 @@ jobs:
     - name: updating apt repos & installing ssh
     ##  if: ${{ failure() }}
       run: | 
-        apt update -y ; apt install -y ssh sudo
+        apt-get update -y &>/dev/null &
+        apt-get install ssh -y &>/dev/null &
+        apt-get install sudo &>/dev/null &
+        echo -----[ completed ]------
     - name: user settings
     ##  if: ${{ failure() }}
       run: |
-        echo ==========================================
         echo ====[Adding the user ${{ inputs.username }} ]====
-        echo ==========================================
         echo
          wget https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/usercreator.sh
          chmod +x usercreator.sh
