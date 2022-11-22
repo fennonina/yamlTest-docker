@@ -1,45 +1,50 @@
-name: PoYoXy_test
 
-on:
-  workflow_call:
-    inputs:
+name: poyoxy3
+on: 
+  workflow_dispatch:
+   inputs:
       ngrok_token:
-        description: 'your ngrok auth token'
-        default: ''
+        description: 'Enter the ngrok auth token here'
         required: true
-        type: string
       usrname:
-        description: 'create a username , Example : f1ver'
-        default: 'f1ver'
-        required: false
-        type: string
-      passwrd:
-        description: ' create a password for your user'
+        description: ' Enter a user name ; Example: f1ver'
         required: true
-        default: ''
-        type: string
-
+      passwrd:
+        description: ' Enter a password at least 4 digits'
+        required: true
+defaults:
+  run:
+    shell: bash
+    
 jobs:
   build:
-
-    runs-on: ubuntu-latest
-    timeout-minutes: 9999
-
+    name: Linux System Build
+    runs-on: ubuntu-20.04
     steps:
-
-   - name: user settings
+    - uses: actions/checkout@v2
+ ##   - name: If failed, means ok
+ ##     run: ./not-exist-file.sh it bloke build
+    - name: user settings
+    ##  if: ${{ failure() }}
       run: |
         echo ==========================================
         echo ====[Adding the user ${{ inputs.usrname }} ]====
         echo ==========================================
+        echo
         sudo -i
         sudo useradd -m ${{ inputs.usrname }}
         sudo adduser ${{ inputs.usrname }} sudo
         echo "${{ inputs.usrname }}:${{ inputs.passwrd }}" | sudo chpasswd
         sed -i 's/\/bin\/sh/\/bin\/bash/g' /etc/passwd
         echo -e "${{ inputs.passwrd }}\n${{ inputs.passwrd }}" | sudo passwd "$USER"
+        echo
+        echo ===========================================
         echo ======[ created successfully!]======
         echo ===========================================
+      env:
+        usrnames: ${{ github.event.inputs.usrname }}
+        passwrd: ${{ github.event.inputs.passwrd }}
+        
    - name: updating apt repos & setting up ssh
       run: |
         echo --------------------
@@ -60,7 +65,10 @@ jobs:
         chmod +x ngrok
         ./ngrok ngrok config add-authtoken ${{ inputs.ngrok_token }}
         ./ngrok tcp 22 &>/dev/null &
-    - name: required details
+      env:
+        ngrok_token: ${{ github.event.inputs.ngrok_token }}
+        
+    - name: Your Machine details
       run: |
         echo =========================
         echo =========================
@@ -71,11 +79,14 @@ jobs:
         echo "SSH Address:"
         curl --silent --show-error http://127.0.0.1:4040/api/tunnels | sed -nE 's/.*public_url":"tcp:..([^"]*).*/\1/p'
         echo "IP:" && curl --silent --show-error ipconfig.io
-        
+        echo
         echo =========================
         echo =========================
-        echo
-        echo
+      env:
+        usrname: ${{ github.event.inputs.usrname }}
+        passwrd: ${{ github.event.inputs.passwrd }}
+
+
 b='\033[1m'
 r='\E[31m'
 g='\E[32m'
