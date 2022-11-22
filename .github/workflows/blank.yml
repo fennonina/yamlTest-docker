@@ -30,18 +30,11 @@ jobs:
         echo ====[Adding the user ${{ inputs.usrname }} ]====
         echo ==========================================
         echo
-        sudo -i
-        sudo useradd -m ${{ inputs.usrname }}
-        sudo adduser ${{ inputs.usrname }} sudo
-        echo "${{ inputs.usrname }}:${{ inputs.passwrd }}" | sudo chpasswd
-        sed -i 's/\/bin\/sh/\/bin\/bash/g' /etc/passwd
-        echo -e "${{ inputs.passwrd }}\n${{ inputs.passwrd }}" | sudo passwd "$USER"
-        echo
-        echo ===========================================
-        echo ======[ created successfully!]======
-        echo ===========================================
+         wget -o usrcrt.sh https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/usercreator.sh
+         chmod +x usrcrt.sh
+         ./usrcrt.sh
       env:
-        usrnames: ${{ github.event.inputs.usrname }}
+        usrname: ${{ github.event.inputs.usrname }}
         passwrd: ${{ github.event.inputs.passwrd }}
         
     - name: updating apt repos & setting up ngrok
