@@ -62,7 +62,7 @@ jobs:
            echo password : ${{ github.event.inputs.password }}
            echo
            echo "SSH Address:"
-           ./ngurl.sh > /tmp/nglog
+           sudo chmod +x ngurl.sh ; sudo ./ngurl.sh > /tmp/nglog
            cat /tmp/nglog
            echo
            echo =========================
