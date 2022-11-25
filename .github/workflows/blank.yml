@@ -63,7 +63,8 @@ jobs:
            echo password : ${{ github.event.inputs.password }}
            echo
            echo "SSH Address:"
-           curl --silent --show-error http://127.0.0.1:4040/api/tunnels | sed -nE 's/.*public_url":"tcp:..([^"]*).*/\1/p'
+           curl -s localhost:4040/api/tunnels | jq -r .tunnels[0].public_url > $HOME/logs/log1 2>&1
+           cat $HOME/logs/log1
            echo "IP:" && curl --silent --show-error ipconfig.io
            echo
            echo =========================
