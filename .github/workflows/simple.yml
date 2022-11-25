@@ -24,13 +24,42 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo 1 2 3 benam yalah!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      
+      - name: say hello :/
         run: |
-          echo slaammmmm !
-          echo Azivaaa Gar tapim!
+          echo ====[ Hello world! ]====
+      - name: Updating apt repos.
+        run: apt-get update -y
+      - name: pulling Docker image.
+        run: docker pull snsyzb/webssh
+      - name: running Docker image.
+        run: docker run -d -p ${{ github.event.inputs.webssh_port }}:${{ github.event.inputs.webssh_port }} snsyzb/webssh wssh --address=0.0.0.0 --port=${{ github.event.inputs.webssh_port }} > /dev/null 2>&1 &
+        env:
+          webssh_port: ${{ github.event.inputs.webssh_port }}
+       - name: getting url address.
+         run: | 
+             mkdir $HOME/logs
+             npm install -g localtunnel
+             lt -s ${{ github.event.inputs.subdomain }} -p ${{ github.event.inputs.webssh_port }} > $HOME/logs/url1.txt 2>&1
+             echo tunnel is running on port : ${{ github.event.inputs.webssh_port }}
+         env: 
+            subdomain: ${{ github.event.inputs.subdomain }}
+            webssh_port: ${{ github.event.inputs.webssh_port }}
+       - name: getting url from another service.
+         run: ssh -R 80:localhost:${{ github.event.inputs.webssh_port }} nokey@localhost.run > $HOME/logs/url2.txt 2>&1
+         env:
+            webssh_port: ${{ github.event.inputs.webssh_port }}            
+       - name : your detail
+         run: | 
+              echo =============================
+              echo
+              echo   URL-1 details:
+              cat $HOME/logs/url1.txt
+              echo
+              echo 
+              echo    URL-2 deatils:
+              cat $HOME/logs/url1.txt
+              echo
+              echo =============================
+        - name: keep running.
+          run: sleep 6h
