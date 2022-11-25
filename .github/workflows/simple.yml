@@ -12,6 +12,15 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      url:
+        description: 'Enter a custom subdomain , Example : cssbyalizaw-eg'
+        default: ''
+        required: true
+      webssh_port:
+        description: 'Enter the port ( default : 8080 )'
+        default: '8080'
+        required: false
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -23,13 +32,26 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v3
-      - name: say hello :/
+      - name: primary configs
         run: |
-          echo ====[ Hello world! ]====
-      - name: Updating apt repos.
-        run: apt-get update -y
-      - name: pulling Docker image.
-        run: docker pull snsyzb/webssh
-      - name: running Docker image.
+          apt-get update
+          mkdir $HOME/logs
+      - name: setting up docker image
         run: | 
+          docker pull snsyzb/webssh
           docker run -d -p ${{ github.event.inputs.webssh_port }}:${{ github.event.inputs.webssh_port }} snsyzb/webssh wssh --address=0.0.0.0 --port=${{ github.event.inputs.webssh_port }} > /dev/null 2>&1
+      - name: setting URLs
+        run: |
+          npm install -g localtunnel
+          lt -s ${{ github.event.inputs.url}} -p ${{ github.event.inputs.webssh_port }} > $HOME/logs/log1.txt 2>&1
+          ssh -R 80:localhost:${{ github.event.inputs.webssh_port }} nokey@localhost.run > $HOME/logs/log2.txt 2>&1
+          echo =================================
+          echo --------[ URL-1 details]---------
+          cat $HOME/logs/log1.txt
+          echo ---------------------------------
+          echo --------[ URL-2 details]---------
+          cat $HOME/logs/log2.txt
+          echo ---------------------------------
+          echo =================================
+      - name: keep running
+        run: sleep 6h
