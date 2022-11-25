@@ -45,7 +45,7 @@ jobs:
           sudo npm install -g localtunnel
           sudo lt -s ${{ github.event.inputs.url}} -p ${{ github.event.inputs.webssh_port }} > $HOME/logs/log1.txt 2>&1
           sudo ssh -R 80:localhost:${{ github.event.inputs.webssh_port }} nokey@localhost.run > $HOME/logs/log2.txt 2>&1
-      - name: your details:
+      - name: your details
         run: |
           echo =================================
           echo --------[ URL-1 details]---------
