@@ -41,16 +41,10 @@ jobs:
           docker pull snsyzb/webssh
           docker run -d -p ${{ github.event.inputs.webssh_port }}:${{ github.event.inputs.webssh_port }} snsyzb/webssh wssh --address=0.0.0.0 --port=${{ github.event.inputs.webssh_port }} > /dev/null 2>&1
       - name: setting URLs
-        run: |
-          sudo npm install -g localtunnel
-          sudo lt -s ${{ github.event.inputs.url}} -p ${{ github.event.inputs.webssh_port }} > $HOME/logs/log1.txt 2>&1
           sudo ssh -R 80:localhost:${{ github.event.inputs.webssh_port }} nokey@localhost.run > $HOME/logs/log2.txt 2>&1
       - name: your details
         run: |
           echo =================================
-          echo --------[ URL-1 details]---------
-          cat $HOME/logs/log1.txt
-          echo ---------------------------------
           echo --------[ URL-2 details]---------
           cat $HOME/logs/log2.txt
           echo ---------------------------------
