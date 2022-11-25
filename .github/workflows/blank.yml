@@ -1,4 +1,3 @@
-
 # This is a basic workflow to help you get started with Actions
 
 name: simpleYml
@@ -23,6 +22,7 @@ on:
       password:
         description: ' Enter a password at least 4 digits'
         required: true
+        
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -35,49 +35,39 @@ jobs:
           apt-get install ssh -y &>/dev/null &
           apt-get install sudo &>/dev/null &
           echo -----[ completed ]------
-    - name: user settings
-      run: |
-        echo ====[Adding the user ${{ inputs.username }} ]====
-        echo
-         wget https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/usercreator.sh
-         chmod +x usercreator.sh
-         sudo ./usercreator.sh -u ${{ github.event.inputs.username }} -p ${{ github.event.inputs.password }}
-      env:
-        username: ${{ github.event.inputs.username }} 
-        password: ${{ github.event.inputs.password }}
-        
-    - name: setting up ssh
-      run: |
-        sudo service ssh status
-        echo ------compltd-------
-        
-    - name: setting up Ngrok
-      run: | 
-        echo ----[ starting ]----
-        wget -O ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip > /dev/null 2>&1
-        unzip ngrok.zip > /dev/null 2>&1
-        sudo chmod +x ngrok
-        ./ngrok authtoken ${{ inputs.ngrok_token }}
-        ./ngrok tcp 22 &>/dev/null &
-      env:
-        ngrok_token: ${{ github.event.inputs.ngrok_token }}
-        
-    - name: Your Machine details
-      run: |
-        echo =========================
-        echo =========================
-        echo
-        echo username : ${{ github.event.inputs.username }}
-        echo password : ${{ github.event.inputs.password }}
-        echo
-        echo "SSH Address:"
-        curl --silent --show-error http://127.0.0.1:4040/api/tunnels | sed -nE 's/.*public_url":"tcp:..([^"]*).*/\1/p'
-        echo "IP:" && curl --silent --show-error ipconfig.io
-        echo
-        echo =========================
-        echo =========================
-      env:
-        username: ${{ github.event.inputs.username }}
-        password: ${{ github.event.inputs.password }}
-     - name: keep running
-       run: sleep 6h
+       - name: user settings
+         run: |
+           echo ====[Adding the user ${{ inputs.username }} ]====
+           echo
+           wget https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/usercreator.sh
+           chmod +x usercreator.sh
+           sudo ./usercreator.sh -u ${{ github.event.inputs.username }} -p ${{ github.event.inputs.password }}        
+      - name: setting up ssh
+        run: |
+          sudo service ssh status
+          echo ------compltd-------
+
+      - name: setting up Ngrok
+        run: | 
+          echo ----[ starting ]----
+          wget -O ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip > /dev/null 2>&1
+          unzip ngrok.zip > /dev/null 2>&1
+          sudo chmod +x ngrok
+          ./ngrok authtoken ${{ inputs.ngrok_token }}
+          ./ngrok tcp 22 &>/dev/null &        
+      - name: Your Machine details
+        run: |
+          echo =========================
+          echo =========================
+          echo
+          echo username : ${{ github.event.inputs.username }}
+          echo password : ${{ github.event.inputs.password }}
+          echo
+          echo "SSH Address:"
+          curl --silent --show-error http://127.0.0.1:4040/api/tunnels | sed -nE 's/.*public_url":"tcp:..([^"]*).*/\1/p'
+          echo "IP:" && curl --silent --show-error ipconfig.io
+          echo
+          echo =========================
+          echo =========================
+       - name: keep running
+         run: sleep 6h
