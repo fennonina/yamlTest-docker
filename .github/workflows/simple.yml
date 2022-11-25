@@ -34,7 +34,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: primary configs
         run: |
-          apt-get update
+          sudo apt update -y
           mkdir $HOME/logs
       - name: setting up docker image
         run: | 
