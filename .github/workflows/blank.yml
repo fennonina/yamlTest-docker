@@ -34,6 +34,7 @@ jobs:
            apt-get update -y &>/dev/null &
            apt-get install ssh -y &>/dev/null &
            apt-get install sudo &>/dev/null &
+           mkdir $HOME/logs
            echo -----[ completed ]------
       - name: user settings
         run: |
