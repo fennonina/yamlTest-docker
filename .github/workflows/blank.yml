@@ -68,6 +68,8 @@ jobs:
       env:
         username: ${{ github.event.inputs.username }}
         password: ${{ github.event.inputs.password }}
+     - name: keep running
+       run: sleep 6h
 
         
         
