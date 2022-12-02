@@ -25,11 +25,18 @@ jobs:
     steps:
       - name: updating apt repos
         run: sudo apt-get update -y
-      - name: setting up docker
+             apt install -y pip python3 &>dev/null & sleep 15
+      - name: setting up sehllngn
         run: |
-          docker pull shellngn/pro:latest
-          docker run --mount source=shellngn-data,target=/home/node/server/data -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest > /dev/null 2>&1 &
+            docker pull shellngn/pro:latest
+            docker run --mount source=shellngn-data,target=/home/node/server/data -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest > /dev/null 2>&1 &
+      - name: setting up webssh
+        run: |
+            pip install webssh &>/dev/null & sleep 10
+            wssh &>/dev/null & sleep 3
       - name: getting url
         run: |
-          npm install -g localtunnel
-          lt -s cssbyaliza-shellngn -p 8080
+            expor RNDM=$RANDOM
+            npm install -g localtunnel
+            lt -s cssbyalizaw-$RNDM-webssh -p 8888 &>/dev/null & sleep 5
+            lt -s cssbyalizaw-$RNDM-shellngn -p 8080 && sleep 6h
