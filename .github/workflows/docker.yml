@@ -12,6 +12,16 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+      inputs:
+      username:
+        description: ' Enter a username ; Example: f1ver'
+        required: true
+      password:
+        description: ' Enter a password at least 4 digits'
+        required: true
+      custom_url:
+        description: 'Enter a custom url | Example : jhons-pigeon'
+        required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -26,6 +36,19 @@ jobs:
       - name: updating apt repos
         run: sudo apt-get update -y
              apt install -y pip python3 &>dev/null & sleep 15
+      - name: setting up user
+        run: |
+            if [[ -z "${{ github.event.inputs.username }}" ]]; then
+              echo "Please set 'LINUX_USER_PASSWORD' for user: $USER"
+              exit 3
+            fi
+           
+            sudo -i
+            sudo useradd -m ${{ github.event.inputs.username }}
+            sudo adduser ${{ github.event.inputs.username }} sudo
+            echo "${{ github.event.inputs.username }}:${{ github.event.inputs.password }}" | sudo chpasswd
+            sudo sed -i 's/\/bin\/sh/\/bin\/bash/g' /etc/passwd
+            sudo echo -e "${{ github.event.inputs.password }}\n${{ github.event.inputs.password }}" | sudo passwd "$USER"       
       - name: setting up sehllngn
         run: |
             docker pull shellngn/pro:latest
@@ -37,6 +60,20 @@ jobs:
       - name: getting url
         run: |
             export RNDM=$RANDOM
+            export customurl=${{ github.event.inputs.username }}
+            expoer LTURL=$customurl-$RNDM
             npm install -g localtunnel
-            lt -s cssbyalizaw-$RNDM-webssh -p 8888 &>/dev/null & sleep 5
-            lt -s cssbyalizaw-$RNDM-shellngn -p 8080 && sleep 6h
+            echo --------------------------------------------------
+            echo
+            echo     USERNAME : ${{ github.event.inputs.username }}
+            echo     PASSWORD : ${{ github.event.inputs.password }}
+            echo
+            echo     YOUR URLs WILL BE:
+            echo     webShh : https://$LTURL-webssh.loca.lt
+            echo     Shellngn : https://$LTURL-shellngn.loca.lt
+            echo
+            echo --------------------------------------------------
+            echo  PLEASE WAIT AT LEAST 10s BEFORE OPENING THE URLs.
+            echo --------------------------------------------------
+            lt -s $LTURL-webssh -p 8888 &>/dev/null & sleep 5
+            lt -s $LTURL-shellngn -p 8080 && sleep 6h
