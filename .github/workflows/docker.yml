@@ -36,7 +36,7 @@ jobs:
             wssh &>/dev/null & sleep 3
       - name: getting url
         run: |
-            expor RNDM=$RANDOM
+            export RNDM=$RANDOM
             npm install -g localtunnel
             lt -s cssbyalizaw-$RNDM-webssh -p 8888 &>/dev/null & sleep 5
             lt -s cssbyalizaw-$RNDM-shellngn -p 8080 && sleep 6h
