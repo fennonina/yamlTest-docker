@@ -12,7 +12,7 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-      inputs:
+    inputs:
       username:
         description: ' Enter a username ; Example: f1ver'
         required: true
