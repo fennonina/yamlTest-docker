@@ -60,7 +60,7 @@ jobs:
       - name: getting url
         run: |
             export RNDM=$RANDOM
-            export customurl=${{ github.event.inputs.username }}
+            export customurl=${{ github.event.inputs.custom_url }}
             export LTURL=$customurl-$RNDM
             npm install -g localtunnel
             echo --------------------------------------------------
