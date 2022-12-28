@@ -60,8 +60,8 @@ jobs:
       - name: setting up cloudflared
         run: |
             wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
-            apt install ./cloudflared-linux-amd64.deb
-            cloudflared update 
+            sudo apt-get install ./cloudflared-linux-amd64.deb
+            sudo cloudflared update 
             sleep 3
       - name: getting url
         run: |
