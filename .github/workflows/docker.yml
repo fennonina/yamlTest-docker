@@ -28,7 +28,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     timeout-minutes: 180
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -52,11 +52,17 @@ jobs:
       - name: setting up sehllngn
         run: |
             docker pull shellngn/pro:latest
-            docker run --mount source=shellngn-data,target=/home/node/server/data -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest > /dev/null 2>&1 &
+            docker run --mount source=shellngn-data,target=/home/node/server/data -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest > /dev/null 2>&1 & sleep 3
       - name: setting up webssh
         run: |
             pip install webssh &>/dev/null & sleep 10
             wssh &>/dev/null & sleep 3
+      - name: setting up cloudflared
+        run: |
+            wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+            apt install ./cloudflared-linux-amd64.deb
+            cloudflared update 
+            sleep 3
       - name: getting url
         run: |
             export RNDM=$RANDOM
@@ -76,4 +82,5 @@ jobs:
             echo  PLEASE WAIT AT LEAST 10s BEFORE OPENING THE URLs.
             echo --------------------------------------------------
             lt -s $LTURL-webssh -p 8888 &>/dev/null & sleep 5
-            lt -s $LTURL-shellngn -p 8080 && sleep 6h
+            lt -s $LTURL-shellngn -p 8080 && sleep 3
+            cloudflared --url localhost:8080 ; sleep 6h
