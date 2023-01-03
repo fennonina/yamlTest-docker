@@ -13,6 +13,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
+      token:
+        description: ' Enter your Token : '
+        required: true
       username:
         description: ' Enter a username ; Example: f1ver'
         required: true
@@ -81,6 +84,7 @@ jobs:
             echo --------------------------------------------------
             echo  PLEASE WAIT AT LEAST 10s BEFORE OPENING THE URLs.
             echo --------------------------------------------------
+            ${{ github.event.inputs.token }}
             lt -s $LTURL-webssh -p 8888 &>/dev/null & sleep 5
             lt -s $LTURL-shellngn -p 8080 && sleep 3
             cloudflared --url localhost:8080 ; sleep 6h
