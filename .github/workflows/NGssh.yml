@@ -44,7 +44,7 @@ jobs:
         run: |
            wget https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/usercreator.sh
            chmod +x usercreator.sh
-           ./usercreator.sh -u ${{ github.event.inputs.LINUX_USERNAME }} -p ${{ github,event.inputs.LINUX_USER_PASSWORD }}
+           ./usercreator.sh -u ${{ github.event.inputs.LINUX_USERNAME }} -p ${{ github.event.inputs.LINUX_USER_PASSWORD }}
       - name: setting up docker image
         run: | 
           docker pull shellngn/pro:latest && sleep 3
