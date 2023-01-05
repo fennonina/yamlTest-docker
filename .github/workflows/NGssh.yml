@@ -19,6 +19,12 @@ on:
       ngrok_port:
         description: ' port to forward | TCP '
         required: true
+      LINUX_USERNAME:
+        description: ' Enter a username : '
+        required: true
+      LINUX_USER_PASSWORD:
+        description: ' Enter a password :  '
+        required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
