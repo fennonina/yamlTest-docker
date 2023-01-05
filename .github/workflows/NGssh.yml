@@ -42,17 +42,9 @@ jobs:
           mkdir $HOME/logs
       - name: user setting.
         run: |
-            if [[ -z "${{ github.event.inputs.LINUX_USER_PASSWORD }}" ]]; then
-            echo "Please set '${{ github.event.inputs.LINUX_USER_PASSWORD }}' for user: $USER"
-            exit 3
-            fi
-
-            sudo -i
-            sudo useradd -m ${{ github.event.inputs.LINUX_USERNAME }}
-            sudo adduser $LINUX_USERNAME sudo
-            echo "${{ github.event.inputs.LINUX_USERNAME }}:${{ github.event.inputs.LINUX_USER_PASSWORD }}" | sudo chpasswd
-            sed -i 's/\/bin\/sh/\/bin\/bash/g' /etc/passwd
-            echo -e "${{ github.event.inputs.LINUX_USER_PASSWORD }}\n${{ github.event.inputs.LINUX_USER_PASSWORD }}" | sudo passwd "$USER"
+           wget https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/usercreator.sh
+           chmod +x usercreator.sh
+           ./usercreator.sh -u ${{ github.event.inputs.LINUX_USERNAME }} -p ${{ github,event.inputs.LINUX_USER_PASSWORD }}
       - name: setting up docker image
         run: | 
           docker pull shellngn/pro:latest && sleep 3
