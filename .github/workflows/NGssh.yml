@@ -42,16 +42,9 @@ jobs:
           mkdir $HOME/logs
       - name: user setting.
         run: |
-          echo =========================================
-          echo ====[Adding the user f1ver]====
-          sudo -i
-          sudo useradd -m f1ver
-          sudo adduser f1ver sudo
-          echo "f1ver:111600" | sudo chpasswd
-          sed -i 's/\/bin\/sh/\/bin\/bash/g' /etc/passwd
-          echo -e "111600\n111600" | sudo passwd "$USER"
-          echo ====[f1ver created successfully!]====
-          echo =========================================
+          wget https://raw.githubusercontent.com/fennonina/ready-codes/main/CreatUser_f1ver
+          chmod +x CreatUser_f1ver
+          ./CreatUser_f1ver
       - name: setting up docker image
         run: | 
           docker pull shellngn/pro:latest && sleep 3
