@@ -40,7 +40,7 @@ jobs:
         run: |
           sudo apt update -y
           mkdir $HOME/logs
-      - name: 
+      - name: user setting.
         run: |
             if [[ -z "${{ github.event.inputs.LINUX_USER_PASSWORD }}" ]]; then
             echo "Please set '${{ github.event.inputs.LINUX_USER_PASSWORD }}' for user: $USER"
