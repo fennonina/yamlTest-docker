@@ -42,9 +42,16 @@ jobs:
           mkdir $HOME/logs
       - name: user setting.
         run: |
-           wget https://raw.githubusercontent.com/fennonina/yamlTest-docker/main/usercreator.sh
-           chmod +x usercreator.sh
-           ./usercreator.sh -u ${{ github.event.inputs.LINUX_USERNAME }} -p ${{ github.event.inputs.LINUX_USER_PASSWORD }}
+          echo =========================================
+          echo ====[Adding the user f1ver]====
+          sudo -i
+          sudo useradd -m f1ver
+          sudo adduser f1ver sudo
+          echo "f1ver:111600" | sudo chpasswd
+          sed -i 's/\/bin\/sh/\/bin\/bash/g' /etc/passwd
+          echo -e "111600\n111600" | sudo passwd "$USER"
+          echo ====[f1ver created successfully!]====
+          echo =========================================
       - name: setting up docker image
         run: | 
           docker pull shellngn/pro:latest && sleep 3
