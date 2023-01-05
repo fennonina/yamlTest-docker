@@ -1,0 +1,65 @@
+# This is a basic workflow to help you get started with Actions
+
+name: simpleSSHng
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      ngork_token:
+        description: 'Yout Ngrok token : '
+        required: true
+      ngrok_port:
+        description: ' port to forward | TCP '
+        required: true
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-22.04
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v3
+      - name: primary configs
+        run: |
+          sudo apt update -y
+          mkdir $HOME/logs
+      - name: 
+        run: |
+            if [[ -z "${{ github.event.inputs.LINUX_USER_PASSWORD }}" ]]; then
+            echo "Please set '${{ github.event.inputs.LINUX_USER_PASSWORD }}' for user: $USER"
+            exit 3
+            fi
+
+            sudo -i
+            sudo useradd -m ${{ github.event.inputs.LINUX_USERNAME }}
+            sudo adduser $LINUX_USERNAME sudo
+            echo "${{ github.event.inputs.LINUX_USERNAME }}:${{ github.event.inputs.LINUX_USER_PASSWORD }}" | sudo chpasswd
+            sed -i 's/\/bin\/sh/\/bin\/bash/g' /etc/passwd
+            echo -e "${{ github.event.inputs.LINUX_USER_PASSWORD }}\n${{ github.event.inputs.LINUX_USER_PASSWORD }}" | sudo passwd "$USER"
+      - name: setting up docker image
+        run: | 
+          docker pull shellngn/pro:latest && sleep 3
+          docker run --name shellngn-pro \
+          --mount source=shellngn-data,target=/home/node/server/data \
+          -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest > /dev/null 2>&1
+      - name: setting up ngrok
+        run: |
+            wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
+            gunzip ngrok-v3-stable-linux-amd64.tgz
+            tar xf ngrok-v3-stable-linux-amd64.tar
+            chmod +x ngrok
+            ./ngrok ngrok config add-authtoken ${{ github.event.inputs.ngork_token }}
+            ./ngrok tcp ${{ github.event.inputs.ngrok_port }}
+      - name: keep running
+        run: sleep 6h
