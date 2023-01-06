@@ -45,11 +45,10 @@ jobs:
       - name: setting up docker image
         run: | 
           docker pull shellngn/pro:latest && sleep 3
-          sudo docker run -i -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ee:latest && sleep 2
+          sudo docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest && sleep 2
       - name: setting up wshh.
         run: |
           sudo pip install webssh
-          wssh > /dev/null
       - name: setting up ngrok
         run: |
             wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
