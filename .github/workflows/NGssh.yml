@@ -49,7 +49,7 @@ jobs:
       - name: setting up wshh.
         run: |
           sudo pip install webssh
-          wssh > /dev/null 2>&1 && sleep 3
+          wssh > /dev/null
       - name: setting up ngrok
         run: |
             wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
