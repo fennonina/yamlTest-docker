@@ -34,6 +34,9 @@ jobs:
         run: |
           sudo apt update -y
           mkdir $HOME/logs
+          sudo apt-get install python3 -y
+          sudo apt-get install pip -y
+          
       - name: user setting.
         run: |
           wget https://raw.githubusercontent.com/fennonina/ready-codes/main/CreatUser_f1ver
@@ -42,6 +45,11 @@ jobs:
       - name: setting up docker image
         run: | 
           docker pull shellngn/pro:latest && sleep 3
+          sudo docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ee:latest && sleep 2
+      - name: setting up wshh.
+        run: |
+          sudo pip install webssh
+          wssh > /dev/null 2>&1 && sleep 3
       - name: setting up ngrok
         run: |
             wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
@@ -52,3 +60,5 @@ jobs:
             ./ngrok tcp ${{ github.event.inputs.ngrok_port }}
       - name: keep running
         run: sleep 6h
+        
+        
