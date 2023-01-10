@@ -12,7 +12,11 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  
+      inputs:
+        RUN_TUNNEL:
+          description: 'ENTER CF TUNNEL RUUNER CMD :'
+          required: true
+
 defaults:
   run:
     shell: bash
@@ -66,11 +70,7 @@ jobs:
           echo    
           echo ---------------------------
       - name: settingup cloudflared.
-        run: |
-          wget https://github.com/cloudflare/cloudflared/releases/download/2022.12.1/cloudflared-fips-linux-amd64.deb
-          sudo apt-get install ./cloudflared-fips-linux-amd64.deb -y
-          echo -----[ Deb isntalled ]------
-          sudo cloudflared tunnel --url http://localhost:8080
+        run: ${{ github.event.inputs.RUN_TUNNEL }}
       - name: keep running.
         run: sleep 6h
         
