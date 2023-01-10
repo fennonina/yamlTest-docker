@@ -65,7 +65,6 @@ jobs:
           echo    portainerPORT : 9443
           echo    
           echo ---------------------------
-          sleep 6h
       - name: settingup cloudflared.
         run: |
           wget https://github.com/cloudflare/cloudflared/releases/download/2022.12.1/cloudflared-fips-linux-amd64.deb
