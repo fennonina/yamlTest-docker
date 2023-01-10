@@ -52,7 +52,7 @@ jobs:
           echo go to next
       - name: second docker setting.
         run: |
-          docker run -d --name shellngn-pro \ --mount source=shellngn-data,target=/home/node/server/data \ -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest
+          sudo docker run -d --name shellngn-pro \ --mount source=shellngn-data,target=/home/node/server/data \ -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest
       - name: yout details.
         run: |
           echo ---------------------------
