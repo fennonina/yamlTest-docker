@@ -1,0 +1,84 @@
+# This is a basic workflow to help you get started with Actions
+
+name: shellSSH1
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      ngork_token:
+        description: 'Yout Ngrok token : '
+        required: true
+      ngrok_port:
+        description: ' port to forward | TCP '
+        required: true
+defaults:
+  run:
+    shell: bash
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-22.04
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v3
+      - name: primary configs
+        run: |
+          sudo apt update -y
+          mkdir $HOME/logs
+          sudo apt-get install python3 -y
+          sudo apt-get install pip -y
+          
+      - name: user setting.
+        run: |
+          wget https://raw.githubusercontent.com/fennonina/ready-codes/main/CreatUser_f1ver
+          chmod +x CreatUser_f1ver
+          ./CreatUser_f1ver
+      - name: pulling dockers.
+        run: | 
+          sudo docker pull shellngn/pro:latest
+          echo -------------[ pulled out ]-------------
+          sleep 5
+          sudo docker pull portainer/portainer-ce:latest
+          echo -------------[ pulled out ]-------------
+          sleep 2
+      - name: setting up docker image
+        run: |
+          sudo docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest
+          echo -------[ successful ]-------------
+          echo go to next
+      - name: second docker setting.
+        run: |
+          docker run -d --name shellngn-pro \ --mount source=shellngn-data,target=/home/node/server/data \ -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest
+      - name: yout details.
+        run: |
+          echo ---------------------------
+          echo    
+          echo   username : f1ver
+          echo   password : 111600
+          echo    
+          echo    shellngnPORT : 8080
+          echo    
+          echo    portainerPORT : 9443
+          echo    
+          echo ---------------------------
+          sleep 6h
+      - name: settingup cloudflared.
+        run: |
+          wget https://github.com/cloudflare/cloudflared/releases/download/2022.12.1/cloudflared-fips-linux-amd64.deb
+          sudo apt-get install ./cloudflared-fips-linux-amd64.deb -y
+          echo -----[ Deb isntalled ]------
+          sudo cloudflared tunnel --url http://localhost:8080
+      - name: keep running.
+        run: sleep 6h
+        
+        
