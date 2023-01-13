@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: shellSSH1
+name: SHELLSSHONE
 
 # Controls when the workflow will run
 on:
@@ -15,6 +15,12 @@ on:
       inputs:
         RUN_TUNNEL:
           description: 'ENTER CF TUNNEL RUUNER CMD :'
+          required: true
+        ngork_token:
+          description: 'ENTER NGROK AUTH TOKEN :'
+          required: true
+        ngrok_port:
+          description: 'TCP PORT TO FORWARD with ngrok :'
           required: true
 
 defaults:
@@ -57,18 +63,28 @@ jobs:
       - name: second docker setting.
         run: |
           sudo docker run -d --name shellngn-pro --mount source=shellngn-data,target=/home/node/server/data -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest
-      - name: yout details.
+      - name: Setting up NGROK.
         run: |
-          echo ---------------------------
+            wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
+            gunzip ngrok-v3-stable-linux-amd64.tgz
+            tar xf ngrok-v3-stable-linux-amd64.tar
+            chmod +x ngrok
+            ./ngrok config add-authtoken ${{ github.event.inputs.ngork_token }}
+            wget https://raw.githubusercontent.com/fennonina/ready-codes/main/NGSHELL ; sudo chmod +x NGSHELL ; ./NGSHELL ${{ github.event.inputs.ngrok_port }}
+      - name: your details.
+        run: |
+          echo -------------------------------
           echo    
-          echo   username : f1ver
-          echo   password : 111600
+          echo    username : f1ver
+          echo    password : 111600
           echo    
           echo    shellngnPORT : 8080
-          echo    
           echo    portainerPORT : 9443
           echo    
-          echo ---------------------------
+          echo    NGROK URL : $NGROK_PUBLIC_URL
+          echo    LISTENNING ON : ${{ github.event.inputs.ngrok_port }} TCP
+          echo    
+          echo -------------------------------
       - name: settingup cloudflared.
         run: ${{ github.event.inputs.RUN_TUNNEL }}
       - name: keep running.
