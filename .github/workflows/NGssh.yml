@@ -19,6 +19,9 @@ on:
       ngrok_port:
         description: ' port to forward | TCP '
         required: true
+      cftun:
+        description: ' Enter the cloudflare tunnel CMD '
+        
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -49,6 +52,9 @@ jobs:
       - name: setting up wshh.
         run: |
           sudo pip install webssh
+      - name: cloudflared tunnel setting.
+        run: |
+            ${{ github.event.inputs.cftun }}
       - name: setting up ngrok
         run: |
             wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
@@ -57,7 +63,7 @@ jobs:
             chmod +x ngrok
             ./ngrok config add-authtoken ${{ github.event.inputs.ngork_token }}
             ./ngrok tcp ${{ github.event.inputs.ngrok_port }}
+      - name: ngrok tunnel detail
+        run: curl -s localhost:4040/api/tunnels | jq -r .tunnels[0].public_url
       - name: keep running
         run: sleep 6h
-        
-        
