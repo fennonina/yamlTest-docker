@@ -70,7 +70,7 @@ jobs:
             cd systemd-ngrok-master
             sudo chmod +x install.sh 
             sudo sh install.sh ${{ github.event.inputs.ngork_token }}
-            wget https://raw.githubusercontent.com/fennonina/ready-codes/main/NGSHELL ; sudo chmod +x NGSHELL ; sudo sh NGSHELL ${{ github.event.inputs.ngrok_port }}
+            nohup ngrok http 80 --log=stdout > ngrok.log &
       - name: your details.
         run: |
           echo -------------------------------
@@ -81,7 +81,8 @@ jobs:
           echo    shellngnPORT : 8080
           echo    portainerPORT : 9443
           echo    
-          echo    NGROK URL : $NGROK_PUBLIC_URL
+          export WEBHOOK_URL="$(curl http://localhost:4040/api/tunnels | jq ".tunnels[0].public_url")"
+          echo    NGROK URL : $WEBHOOK_URL
           echo    LISTENNING ON : ${{ github.event.inputs.ngrok_port }} TCP
           echo    
           echo -------------------------------
