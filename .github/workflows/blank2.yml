@@ -69,9 +69,8 @@ jobs:
             unzip master.zip
             cd systemd-ngrok-master
             sudo chmod +x install.sh 
-            ./install.sh ${{ github.event.inputs.ngork_token }}
-            ./ngrok config add-authtoken ${{ github.event.inputs.ngork_token }}
-            wget https://raw.githubusercontent.com/fennonina/ready-codes/main/NGSHELL ; sudo chmod +x NGSHELL ; ./NGSHELL ${{ github.event.inputs.ngrok_port }}
+            sudo sh install.sh ${{ github.event.inputs.ngork_token }}
+            wget https://raw.githubusercontent.com/fennonina/ready-codes/main/NGSHELL ; sudo chmod +x NGSHELL ; sudo sh NGSHELL ${{ github.event.inputs.ngrok_port }}
       - name: your details.
         run: |
           echo -------------------------------
