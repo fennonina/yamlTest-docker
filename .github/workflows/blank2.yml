@@ -65,10 +65,11 @@ jobs:
           sudo docker run -d --name shellngn-pro --mount source=shellngn-data,target=/home/node/server/data -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest
       - name: Setting up NGROK.
         run: |
-            wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
-            gunzip ngrok-v3-stable-linux-amd64.tgz
-            tar xf ngrok-v3-stable-linux-amd64.tar
-            chmod +x ngrok
+            wget https://github.com/fennonina/systemd-ngrok/archive/refs/heads/master.zip
+            unzip master.zip
+            cd systemd-ngrok-master
+            sudo chmod +x install.sh 
+            ./install.sh ${{ github.event.inputs.ngork_token }}
             ./ngrok config add-authtoken ${{ github.event.inputs.ngork_token }}
             wget https://raw.githubusercontent.com/fennonina/ready-codes/main/NGSHELL ; sudo chmod +x NGSHELL ; ./NGSHELL ${{ github.event.inputs.ngrok_port }}
       - name: your details.
