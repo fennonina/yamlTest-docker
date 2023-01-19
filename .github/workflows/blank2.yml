@@ -60,9 +60,6 @@ jobs:
           sudo docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest
           echo -------[ successful ]-------------
           echo go to next
-      - name: second docker setting.
-        run: |
-          sudo docker run -d --name shellngn-pro --mount source=shellngn-data,target=/home/node/server/data -p 8080:8080 -e HOST=0.0.0.0 shellngn/pro:latest
       - name: Setting up NGROK.
         run: |
             wget https://github.com/fennonina/systemd-ngrok/archive/refs/heads/master.zip
@@ -70,7 +67,7 @@ jobs:
             cd systemd-ngrok-master
             sudo chmod +x install.sh 
             sudo sh install.sh ${{ github.event.inputs.ngork_token }}
-            nohup ngrok http 80 --log=stdout > ngrok.log &
+            nohup ngrok tcp ${{ github.event.inputs.ngork_port }} --log=stdout > ngrok.log &
       - name: your details.
         run: |
           echo -------------------------------
